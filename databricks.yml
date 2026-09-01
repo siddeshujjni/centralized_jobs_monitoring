@@ -1,0 +1,22 @@
+bundle:
+  name: centralized-jobs-monitoring
+
+targets:
+  default:
+    workspace:
+      host: https://YOUR-WORKSPACE.cloud.databricks.com
+      profile: DEFAULT
+
+resources:
+  apps:
+    centralized-jobs-monitoring:
+      name: centralized-jobs-monitoring
+      description: "Real-time Databricks Jobs monitoring with anomaly detection"
+      source_code_path: /Workspace/Users/YOUR-EMAIL/centralized-jobs-monitoring
+      resources:
+        - name: database
+          database:
+            # Optional: only needed if you enable the Lakebase cache (set PGHOST).
+            instance_name: YOUR-LAKEBASE-INSTANCE
+            database_name: databricks_postgres
+            permission: CAN_CONNECT_AND_CREATE

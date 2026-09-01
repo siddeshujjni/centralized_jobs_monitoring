@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Keep frontend/dist for deployment!
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Databricks
+.databricks/
+
+# App config — copy app.yaml.example to app.yaml locally. Never commit real
+# workspace URLs, PAT tokens, or SMTP credentials.
+app.yaml
+app_with_secrets.yaml
+
+# OS
+.DS_Store
+.venv
+node_modules_tmp

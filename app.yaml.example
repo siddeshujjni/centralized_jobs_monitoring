@@ -1,0 +1,73 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Example app configuration. Copy this file to `app.yaml` and fill in your own
+# values:
+#
+#     cp app.yaml.example app.yaml
+#
+# `app.yaml` is git-ignored so real workspace URLs and tokens are never
+# committed. NEVER put PAT tokens (dapi...) or SMTP passwords in a file that is
+# under source control — set those via the Databricks App Settings UI instead
+# (see README → "Store PAT tokens securely").
+# ─────────────────────────────────────────────────────────────────────────────
+
+command:
+  - "python"
+  - "app.py"
+
+env:
+  - name: DATABRICKS_JOBS_MONITOR
+    value: "true"
+
+  # ─── Company / Branding ────────────────────────────────────────────────────
+  - name: APP_COMPANY_NAME
+    value: "Your Company"          # shown in the sidebar and in alert emails
+
+  # ─── AI Analysis (OPTIONAL — disabled by default) ──────────────────────────
+  # AI-powered root-cause analysis and remediation suggestions use Claude via
+  # the Databricks Foundation Model API. This is OFF by default. Set to "true"
+  # to enable it (the app's service principal must have "Can Query" on the
+  # serving endpoint). When disabled, the app still runs full statistical
+  # anomaly detection with no LLM calls.
+  - name: ENABLE_AI_ANALYSIS
+    value: "false"
+  - name: SERVING_ENDPOINT
+    value: "databricks-claude-sonnet-4-5"   # only used when ENABLE_AI_ANALYSIS=true
+
+  # ─── Multi-Workspace Configuration ─────────────────────────────────────────
+  # Comma-separated list of workspace host URLs to monitor.
+  - name: WORKSPACE_URLS
+    value: "https://YOUR-WORKSPACE.cloud.databricks.com,https://YOUR-SECOND-WORKSPACE.cloud.databricks.com"
+
+  # Optional per-workspace display names. The slug is the hostname prefix,
+  # uppercased, with dashes replaced by underscores.
+  - name: WORKSPACE_NAME_YOUR_WORKSPACE
+    value: "Production"
+  - name: WORKSPACE_NAME_YOUR_SECOND_WORKSPACE
+    value: "Development"
+
+  # ─── Per-Workspace PATs ─────────────────────────────────────────────────────
+  # The workspace where the app is deployed uses the app's service principal —
+  # no PAT needed. For any ADDITIONAL workspace, create a PAT and set it as
+  # WORKSPACE_TOKEN_<SLUG> in the Databricks App Settings UI (NOT here).
+  # Example (set via UI, do not commit real tokens):
+  #   WORKSPACE_TOKEN_YOUR_SECOND_WORKSPACE = dapi...
+
+  # ─── Lakebase Autoscaling Cache (OPTIONAL) ─────────────────────────────────
+  # Only needed if you want the background poller + Postgres cache. Leave PGHOST
+  # unset to run without a cache (live Databricks API calls only). Autoscaling
+  # does not support `valueFrom: database` injection — values are hardcoded and
+  # the token is generated at runtime in server/db.py.
+  # - name: PGHOST
+  #   value: "YOUR-LAKEBASE-ENDPOINT.database.cloud.databricks.net"
+  # - name: PGPORT
+  #   value: "5432"
+  # - name: PGDATABASE
+  #   value: "databricks_postgres"
+  # - name: PGUSER
+  #   value: "YOUR-SERVICE-PRINCIPAL-CLIENT-ID"
+  # - name: LAKEBASE_ENDPOINT
+  #   value: "projects/centralized-jobs-monitoring/branches/production/endpoints/primary"
+
+  # ─── Email Alerts (OPTIONAL — disabled unless ALERT_EMAIL_TO is set) ────────
+  # Enable by setting ALERT_EMAIL_TO, SMTP_HOST, SMTP_USER, SMTP_PASSWORD.
+  # Set SMTP_PASSWORD via the App Settings UI, not here.
